@@ -4,11 +4,20 @@ const initialState = {
 
 function panierReducers(state = initialState, action) {
   switch (action.type) {
-    case 'ADD_ARTICLE_CART':
+    case 'ADD_ARTICLE_CART': {
+      const existingItem = state.items.find(item => item.id === action.payload.id);
+
       return {
         ...state,
-        items: [...state.items, action.payload]
+        items: existingItem
+          ? state.items.map(item =>
+              item.id === action.payload.id
+                ? { ...item, quantity: (item.quantity ?? 1) + (action.payload.quantity ?? 1) }
+                : item
+            )
+          : [...state.items, { ...action.payload, quantity: action.payload.quantity ?? 1 }]
       };
+    }
     case 'REMOVE_ARTICLE_CART':
       return {
         ...state,
