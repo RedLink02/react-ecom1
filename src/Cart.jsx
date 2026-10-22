@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
 import {
@@ -10,6 +10,7 @@ import {
 
 export default function Cart() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const cartItems = useSelector(state => state.panier.items)
   const itemCount = cartItems.reduce((count, item) => count + (item.quantity ?? 1), 0)
   const subtotal = cartItems.reduce(
@@ -46,13 +47,10 @@ export default function Cart() {
 
           {cartItems.length === 0 ? (
             <div className="rounded-2xl bg-white px-6 py-16 text-center shadow-sm ring-1 ring-slate-200">
-              <span aria-hidden="true" className="text-5xl">🛍️</span>
+              <span aria-hidden="true" className="text-5xl">🛒</span>
               <h3 className="mt-4 text-xl font-bold text-slate-900">
                 Your cart is empty
               </h3>
-              <p className="mt-2 text-slate-600">
-                Browse the collection and find something you love.
-              </p>
               <Link
                 to="/"
                 className="mt-6 inline-flex rounded-lg bg-blue-600 px-2 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -162,7 +160,13 @@ export default function Cart() {
                   placeholder="Enter your code"
                   className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
                 />
-                <button className='mt-5 w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'>Check-Out</button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/checkout', { state: { fromCart: true } })}
+                  className="mt-5 block w-full rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                >
+                  Check-Out
+                </button>
               </aside>
             </div>
           )}
